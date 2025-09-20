@@ -6,7 +6,142 @@
 <title>VALOR COMMUNITY — NAPOLEON RP</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Great+Vibes&display=swap" rel="stylesheet">
 
+<style>
+:root {
+  --gold: #c9a227;
+  --gold-2: #f5d879;
+}
 
+html, body {
+  margin:0; padding:0;
+  height:100%;
+  overflow:hidden;
+  font-family:'Cinzel', serif;
+  background: url('https://i.imgur.com/62RkVO4.png') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+}
+
+body::after {
+  content:'';
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  background-color: rgba(0,0,0,0.45);
+  pointer-events:none; z-index:0;
+}
+
+/* Contenu principal */
+.wrap {
+  position: relative; z-index:1;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  height:100%; text-align:center;
+}
+
+/* Logo statique 300x300 */
+.emblem {
+  margin: 20px 0;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  display: inline-block;
+  overflow: hidden;
+}
+.emblem img {
+  width: 300px;
+  height: 300px;
+  border-radius: 12px;
+  display: block;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.7)) drop-shadow(-1px -1px 3px rgba(255,215,0,0.6));
+  object-fit: cover;
+}
+
+/* Barre de progression avec surbrillance dorée */
+.progress-container {
+  width: 80%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+.progress {
+  width: 100%;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.15);
+  overflow: hidden;
+  position: relative;
+}
+.bar {
+  height: 100%;
+  width: 0%; /* remplie à 50% pour visualisation */
+  background: linear-gradient(90deg, var(--gold), var(--gold-2));
+  box-shadow: 0 0 15px rgba(255,220,120,0.8);
+  transition: width 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Surbrillance dorée animée */
+.bar::after {
+  content:'';
+  position: absolute;
+  top:0; left:-50%;
+  width:50%;
+  height:100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: skewX(-20deg);
+  animation: shineBar 2s infinite;
+  pointer-events:none;
+}
+
+/* Statut et citation */
+.status {
+  font-size: 1.1rem;
+  margin-top: 8px;
+  animation: pulse 2s infinite;
+  color: #fff;
+}
+.quote {
+  margin-top: 25px;
+  font-style: italic;
+  opacity: 0.9;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  transition: opacity 1s ease;
+}
+
+/* Crédits en bas à gauche */
+#credits-container {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  z-index: 2;
+}
+.credit-popup {
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 1s ease; /* fondu */
+  background: none;
+}
+
+/* Animations */
+@keyframes shineBar {0% { left:-50%; } 50% { left:100%; } 100% { left:100%; }}
+@keyframes progressGlow {0%{filter:drop-shadow(0 0 2px var(--gold))}100%{filter:drop-shadow(0 0 12px var(--gold-2))}}
+@keyframes pulse {0%,100%{opacity:1}50%{opacity:0.6}}
+</style>
 </head>
 <body>
 
