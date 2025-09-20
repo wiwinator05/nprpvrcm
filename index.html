@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VALOR COMMUNITY — NAPOLEON RP</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Great+Vibes&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+
+<div class="wrap">
+  <div class="emblem">
+    <img src="https://i.imgur.com/IXsZuUC.png" alt="Logo Napoléon">
+  </div>
+
+  <div class="progress-container">
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+  </div>
+
+  <div class="status" id="status">Préparation à l’adhésion…</div>
+  <div class="quote" id="quote">« Impossible n’est pas français. »</div>
+</div>
+
+<!-- Crédits -->
+<div id="credits-container"></div>
+
+<!-- Musique de fond -->
+<audio id="bgmusic" autoplay loop>
+  <source src="https://asor44.fr/wp-content/uploads/2018/02/La_chanson_de_l_oignon.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Citations défilantes avec durée plus longue
+(function(){
+  const QUOTES = [
+    "« Impossible n’est pas français. »",
+    "« Le courage n’est pas d’avoir la force mais de surmonter la faiblesse. »",
+    "« Une armée marche à son estomac. »",
+    "« Les soldats gagnent les batailles, les généraux en reçoivent la gloire. »"
+  ];
+
+  const quoteEl = document.getElementById("quote");
+  let currentQuote = 0;
+  const fadeDuration = 1000;
+  const displayInterval = 10000; // 10s affichage
+
+  function showQuote() {
+    quoteEl.style.opacity = 0;
+    setTimeout(() => {
+      quoteEl.textContent = QUOTES[currentQuote];
+      quoteEl.style.opacity = 1;
+      currentQuote = (currentQuote + 1) % QUOTES.length;
+    }, fadeDuration);
+  }
+
+  showQuote();
+  setInterval(showQuote, displayInterval);
+})();
+
+// Barre de progression GMod
+(function(){
+  const bar = document.getElementById("bar");
+  const statusEl = document.getElementById("status");
+  let total = 0, needed = 0;
+
+  function updateProgress() {
+    let progress = (total>0)?((total-needed)/total):0;
+    bar.style.width = (progress*100) + "%";
+  }
+
+  window.GameDetails = function(name,url,map,max,steamid,gamemode){statusEl.textContent="Connexion au serveur…";}
+  window.SetStatusChanged = function(str){statusEl.textContent=str;}
+  window.SetFilesTotal = function(n){total=n; needed=n; updateProgress();}
+  window.SetFilesNeeded = function(n){needed=n; updateProgress();}
+  window.DownloadingFile = function(name){statusEl.textContent="Téléchargement : "+name; updateProgress();}
+})();
+
+// Crédits défilants un seul à la fois, nouveau crédit après disparition complète
+(function(){
+  const CREDITS = [
+    "VALOR COMMUNITY",
+    "NAPOLEON RP"
+  ];
+
+  const container = document.getElementById('credits-container');
+  let currentCredit = 0;
+  let popup = null;
+  const fadeDuration = 1000; 
+  const displayInterval = 5000; 
+
+  function showCredit() {
+    if(popup){
+      popup.style.opacity = 0;
+      setTimeout(() => {
+        if(popup && popup.parentNode) container.removeChild(popup);
+        popup = null;
+        displayNextCredit();
+      }, fadeDuration);
+    } else {
+      displayNextCredit();
+    }
+  }
+
+  function displayNextCredit(){
+    popup = document.createElement('div');
+    popup.className = 'credit-popup';
+    popup.textContent = CREDITS[currentCredit];
+    container.appendChild(popup);
+    setTimeout(() => { popup.style.opacity = 1; }, 50);
+    setTimeout(() => {
+      currentCredit = (currentCredit + 1) % CREDITS.length;
+      showCredit();
+    }, displayInterval);
+  }
+
+  showCredit();
+})();
+</script>
+
+</body>
+</html>
