@@ -124,10 +124,10 @@ body::after {
   transition: opacity 1s ease;
 }
 
-/* Crédits en bas à gauche */
+/* Crédits et lien musique en bas à gauche */
 #credits-container {
   position: absolute;
-  bottom: 20px;
+  bottom: 50px;
   left: 20px;
   display: flex;
   flex-direction: column;
@@ -141,8 +141,15 @@ body::after {
   font-size: 1rem;
   text-transform: uppercase;
   opacity: 0;
-  transition: opacity 1s ease; /* fondu */
+  transition: opacity 1s ease;
   background: none;
+}
+#music-link {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: #f5d879;
+  font-family: 'Cinzel', serif;
+  text-decoration: underline;
 }
 
 /* Animations */
@@ -173,8 +180,11 @@ body::after {
   <div class="quote" id="quote">« Impossible n’est pas français. »</div>
 </div>
 
-<!-- Crédits -->
+<!-- Crédits et lien musique -->
 <div id="credits-container"></div>
+<div id="music-link">
+  🎵 <a href="https://archive.org/details/SymphonyNo.3InEFlatMajorEroicaOp.55" target="_blank">Écouter Beethoven: Symphony No.3, II. Marcia funebre</a>
+</div>
 
 <!-- Musique de fond -->
 <audio id="bgmusic" autoplay loop>
@@ -193,7 +203,7 @@ body::after {
   const quoteEl = document.getElementById("quote");
   let currentQuote = 0;
   const fadeDuration = 1000;
-  const displayInterval = 10000; // 10s affichage
+  const displayInterval = 10000;
 
   function showQuote() {
     quoteEl.style.opacity = 0;
@@ -220,12 +230,11 @@ body::after {
   }
 
   window.GameDetails = function(name,url,map,max,steamid,gamemode){
-    // Le statut principal ne change plus ici
     downloadEl.textContent = "";
   }
 
   window.SetStatusChanged = function(str){
-    // Le statut principal reste fixe, ne pas modifier
+    // statut principal reste fixe
   }
 
   window.SetFilesTotal = function(n){
@@ -237,7 +246,7 @@ body::after {
   }
 
   window.DownloadingFile = function(name){
-    downloadEl.textContent = "Téléchargement : " + name; // <- ici uniquement downloadMessages
+    downloadEl.textContent = "Téléchargement : " + name;
     updateProgress();
   }
 })();
@@ -282,7 +291,7 @@ body::after {
 // Musique de fond avec volume automatique
 (function(){
   const bgMusic = document.getElementById('bgmusic');
-  bgMusic.volume = 0.2;
+  bgMusic.volume = 0.3; // 50% du volume
 })();
 </script>
 
