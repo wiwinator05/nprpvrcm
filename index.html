@@ -105,8 +105,16 @@ body::after {
   animation: pulse 2s infinite;
   color: #fff;
 }
-.download-messages {
+.connection-info {
   margin-top: 10px;
+  font-size: 1rem;
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  text-align: center;
+  min-height: 1.2em;
+}
+.download-messages {
+  margin-top: 5px;
   font-size: 1rem;
   color: #fff;
   font-family: 'Cinzel', serif;
@@ -145,7 +153,9 @@ body::after {
   background: none;
 }
 #music-link {
-  margin-top: 5px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
   font-size: 0.9rem;
   color: #f5d879;
   font-family: 'Cinzel', serif;
@@ -174,8 +184,8 @@ body::after {
     </div>
   </div>
 
-  <!-- Zone messages download GMod -->
-  <div class="download-messages" id="downloadMessages"></div>
+  <!-- Texte de progression de la connexion GMod -->
+  <div class="connection-info" id="connectionInfo"></div>
 
   <div class="quote" id="quote">« Impossible n’est pas français. »</div>
 </div>
@@ -221,32 +231,42 @@ body::after {
 // Barre de progression et messages download GMod
 (function(){
   const bar = document.getElementById("bar");
-  const downloadEl = document.getElementById("downloadMessages");
-  let total = 0, needed = 0;
+  const connectionInfo = document.getElementById("connectionInfo");
+  let totalFiles = 0;
+  let remainingFiles = 0;
 
   function updateProgress() {
-    let progress = (total>0)?((total-needed)/total):0;
-    bar.style.width = (progress*100) + "%";
+    let progress = 0;
+    if(totalFiles > 0){
+      progress = ((totalFiles - remainingFiles) / totalFiles) * 100;
+    }
+    bar.style.width = progress + "%";
+  }
+
+  function updateConnectionInfo(text){
+    connectionInfo.textContent = text;
   }
 
   window.GameDetails = function(name,url,map,max,steamid,gamemode){
-    downloadEl.textContent = "";
-  }
-
-  window.SetStatusChanged = function(str){
-    // statut principal reste fixe
+    updateConnectionInfo("Connexion au serveur…");
+    totalFiles = 0;
+    remainingFiles = 0;
+    updateProgress();
   }
 
   window.SetFilesTotal = function(n){
-    total=n; needed=n; updateProgress();
+    totalFiles = n;
+    remainingFiles = n;
+    updateProgress();
   }
 
   window.SetFilesNeeded = function(n){
-    needed=n; updateProgress();
+    remainingFiles = n;
+    updateProgress();
   }
 
   window.DownloadingFile = function(name){
-    downloadEl.textContent = "Téléchargement : " + name;
+    updateConnectionInfo("Téléchargement : " + name);
     updateProgress();
   }
 })();
@@ -291,7 +311,7 @@ body::after {
 // Musique de fond avec volume automatique
 (function(){
   const bgMusic = document.getElementById('bgmusic');
-  bgMusic.volume = 0.3; // 50% du volume
+  bgMusic.volume = 0.5; // 50% du volume
 })();
 </script>
 
