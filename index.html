@@ -77,7 +77,7 @@ body::after {
 }
 .bar {
   height: 100%;
-  width: 0%; /* remplie à 50% pour visualisation */
+  width: 0%; 
   background: linear-gradient(90deg, var(--gold), var(--gold-2));
   box-shadow: 0 0 15px rgba(255,220,120,0.8);
   transition: width 0.25s ease;
@@ -98,12 +98,20 @@ body::after {
   pointer-events:none;
 }
 
-/* Statut et citation */
+/* Statut principal et citation */
 .status {
   font-size: 1.1rem;
-  margin-top: 8px;
+  margin-bottom: 8px;
   animation: pulse 2s infinite;
   color: #fff;
+}
+.download-messages {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  max-width: 800px;
+  text-align: center;
 }
 .quote {
   margin-top: 25px;
@@ -137,6 +145,17 @@ body::after {
   background: none;
 }
 
+/* Contrôle du volume */
+.volume-control {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+#volumeSlider {
+  width: 200px;
+}
+
 /* Animations */
 @keyframes shineBar {0% { left:-50%; } 50% { left:100%; } 100% { left:100%; }}
 @keyframes progressGlow {0%{filter:drop-shadow(0 0 2px var(--gold))}100%{filter:drop-shadow(0 0 12px var(--gold-2))}}
@@ -150,14 +169,25 @@ body::after {
     <img src="https://i.imgur.com/IXsZuUC.png" alt="Logo Napoléon">
   </div>
 
+  <!-- Statut principal au-dessus de la barre -->
+  <div class="status" id="status">Préparation à l’adhésion…</div>
+
   <div class="progress-container">
     <div class="progress">
       <div class="bar" id="bar"></div>
     </div>
   </div>
 
-  <div class="status" id="status">Préparation à l’adhésion…</div>
+  <!-- Zone messages download -->
+  <div class="download-messages" id="downloadMessages"></div>
+
   <div class="quote" id="quote">« Impossible n’est pas français. »</div>
+
+  <!-- Contrôle du volume -->
+  <div class="volume-control">
+    <label for="volumeSlider" style="color:white; font-family:'Cinzel', serif;">Volume :</label>
+    <input type="range" id="volumeSlider" min="0" max="100" value="50">
+  </div>
 </div>
 
 <!-- Crédits -->
@@ -169,7 +199,7 @@ body::after {
 </audio>
 
 <script>
-// Citations défilantes avec durée plus longue
+// Citations défilantes
 (function(){
   const QUOTES = [
     "« Impossible n’est pas français. »",
@@ -177,7 +207,6 @@ body::after {
     "« Une armée marche à son estomac. »",
     "« Les soldats gagnent les batailles, les généraux en reçoivent la gloire. »"
   ];
-
   const quoteEl = document.getElementById("quote");
   let currentQuote = 0;
   const fadeDuration = 1000;
@@ -196,10 +225,11 @@ body::after {
   setInterval(showQuote, displayInterval);
 })();
 
-// Barre de progression GMod
+// Barre de progression et messages download GMod
 (function(){
   const bar = document.getElementById("bar");
   const statusEl = document.getElementById("status");
+  const downloadEl = document.getElementById("downloadMessages");
   let total = 0, needed = 0;
 
   function updateProgress() {
@@ -207,25 +237,37 @@ body::after {
     bar.style.width = (progress*100) + "%";
   }
 
-  window.GameDetails = function(name,url,map,max,steamid,gamemode){statusEl.textContent="Connexion au serveur…";}
-  window.SetStatusChanged = function(str){statusEl.textContent=str;}
-  window.SetFilesTotal = function(n){total=n; needed=n; updateProgress();}
-  window.SetFilesNeeded = function(n){needed=n; updateProgress();}
-  window.DownloadingFile = function(name){statusEl.textContent="Téléchargement : "+name; updateProgress();}
+  window.GameDetails = function(name,url,map,max,steamid,gamemode){
+    statusEl.textContent="Connexion au serveur…";
+    downloadEl.textContent = "";
+  }
+
+  window.SetStatusChanged = function(str){
+    statusEl.textContent=str;
+  }
+
+  window.SetFilesTotal = function(n){
+    total=n; needed=n; updateProgress();
+  }
+
+  window.SetFilesNeeded = function(n){
+    needed=n; updateProgress();
+  }
+
+  window.DownloadingFile = function(name){
+    downloadEl.textContent = "Téléchargement : " + name;
+    updateProgress();
+  }
 })();
 
-// Crédits défilants un seul à la fois, nouveau crédit après disparition complète
+// Crédits défilants
 (function(){
-  const CREDITS = [
-    "VALOR COMMUNITY",
-    "NAPOLEON RP"
-  ];
-
+  const CREDITS = ["VALOR COMMUNITY","NAPOLEON RP"];
   const container = document.getElementById('credits-container');
   let currentCredit = 0;
   let popup = null;
-  const fadeDuration = 1000; 
-  const displayInterval = 5000; 
+  const fadeDuration = 1000;
+  const displayInterval = 5000;
 
   function showCredit() {
     if(popup){
@@ -253,6 +295,16 @@ body::after {
   }
 
   showCredit();
+})();
+
+// Contrôle du volume
+(function(){
+  const bgMusic = document.getElementById('bgmusic');
+  const volumeSlider = document.getElementById('volumeSlider');
+  bgMusic.volume = volumeSlider.value / 50;
+  volumeSlider.addEventListener('input', function() {
+    bgMusic.volume = this.value / 50;
+  });
 })();
 </script>
 
